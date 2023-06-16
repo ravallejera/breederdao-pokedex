@@ -1,0 +1,14 @@
+node_modules
+
+# next.js
+/.next/
+/out/
+
+# public
+/public/*.mp4
+
+# misc
+.DS_Store
+*.pem
+.vscode
+.prettierrc
