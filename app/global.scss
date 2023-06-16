@@ -18,10 +18,15 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background: white;
+  font-family: var(--font-karla);
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 1.17;
 }
+
+.bg-gradient-1 {
+  background: linear-gradient(180deg, #F5DB13 0%, #F2B807 100%);
+}
+
+

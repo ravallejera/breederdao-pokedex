@@ -1,0 +1,46 @@
+
+
+// mobile nav expanded styling
+@media (max-width: 767px) {
+  .navOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 19;
+    background: #212121;
+    opacity: 0.5;
+    display: block!important;
+  }
+  .navInner {
+    position: fixed;
+    z-index: 20;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding-bottom: 44px;
+    box-shadow: 4px 4px 24px rgba(1, 17, 38, 0.2);
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    background: linear-gradient(180deg, #F5DB13 0%, #F2B807 100%);
+    display: grid!important;
+    align-items: unset!important;
+    justify-content: unset!important;
+  }
+  .navLogo {
+    padding-top: 36px;
+    justify-content: center;
+    svg {
+      width: 138px;
+    }
+  }
+  .navMenu {
+    display: block!important;
+    margin-top: 36px;
+    ul {
+      text-align: center;
+      row-gap: 16px;
+    }
+  }
+}
