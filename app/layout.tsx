@@ -1,7 +1,9 @@
-import './global.scss'
-import { Inter } from 'next/font/google'
+import './global.scss';
+import { Inter } from 'next/font/google';
 
 const inter = Inter({ subsets: ['latin'] })
+
+
 
 export const metadata = {
   title: 'BreederDAO - PokeDex App',
