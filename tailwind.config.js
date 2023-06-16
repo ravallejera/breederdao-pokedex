@@ -20,6 +20,7 @@ module.exports = {
         header: '0px 4px 16px rgba(1, 28, 64, 0.2)',
         'header-expanded': '4px 4px 24px rgba(1, 17, 38, 0.2)',
         button: 'inset 0px -9px 0px rgba(0, 0, 0, 0.18)',
+        textfield: '4px 4px 4px rgba(33, 33, 33, 0.1)',
       }
     },
     colors: {
@@ -28,6 +29,7 @@ module.exports = {
       secondary: '#F28F16',
       danger: '#D93E30',
       light: '#F6F7F9',
+      'light-2': '#F2F2F2',
       dark: '#212121',
       green: '#73D677',
       white: '#ffffff',

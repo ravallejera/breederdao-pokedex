@@ -1,6 +1,7 @@
 import './global.scss';
 import { Karla, Roboto } from 'next/font/google';
 import cn from 'classnames';
+import { ApolloWrapper } from "@/lib/apollo-wrapper";
 
 import Header from '@/components/header';
 import Footer from '@/components/footer';
@@ -29,9 +30,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={cn(karla.variable, roboto.variable)}>
+      <body className={cn(karla.variable, roboto.variable, 'bg-third')}>
         <Header />
-        <main>{children}</main>
+        <ApolloWrapper>
+          <main>{children}</main>
+        </ApolloWrapper>
         <Footer />
       </body>
     </html>
