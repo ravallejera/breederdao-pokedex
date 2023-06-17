@@ -53,7 +53,7 @@ export default function Card({
           <div className="absolute z-2 inset-x-0 inset-y-0" onClick={toggleCard} />
           <div style={{ background: 'linear-gradient(270deg, #B33327 0.15%, #D93E30 100%)' }} className={cn(
             'relative z-10 overflow-y-auto h-full w-full bg-light p-5 pt-10 rounded-xl',
-            'md:p-0 md:h-[310px] md:max-w-[700px]',
+            'md:p-0 md:h-[310px] md:max-w-[700px] md:overflow-y-visible',
             'lg:h-[370px] lg:max-w-[800px]'
           )}>
             <button onClick={toggleCard} className={cn(
