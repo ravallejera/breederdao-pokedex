@@ -4,7 +4,6 @@ import  { Pokemon } from '@/app/pokedex/page';
 import cn from 'classnames';
 import Pills from './pill';
 import SvgClose from '@/svg/close';
-import styles from './card.module.scss';
 
 export default function Card({
     data
@@ -51,8 +50,9 @@ export default function Card({
           'fixed z-30 inset-x-0 inset-y-0 before:content-[""] before:fixed before:inset-x-0 before:inset-y-0 before:bg-light',
           'flex md:items-center md:justify-center md:before:bg-dark md:before:opacity-50',
         )}>
-          <div className={cn(styles.cardDetails,
-            'relative z-10 h-full w-full bg-light p-5 pt-10',
+          <div className="absolute z-2 inset-x-0 inset-y-0" onClick={toggleCard} />
+          <div style={{ background: 'linear-gradient(270deg, #B33327 0.15%, #D93E30 100%)' }} className={cn(
+            'relative z-10 overflow-y-auto h-full w-full bg-light p-5 pt-10 rounded-xl',
             'md:p-0 md:h-[310px] md:max-w-[700px]',
             'lg:h-[370px] lg:max-w-[800px]'
           )}>

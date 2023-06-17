@@ -7,6 +7,7 @@ import cn from 'classnames';
 import Card from '@/components/card';
 import SvgClose from '@/svg/close';
 import styles from './page.module.scss';
+import { useMediaQuery } from 'usehooks-ts';
 
 export interface Pokemon {
   __typename: string;
@@ -73,6 +74,12 @@ const query = gql`
   }
 `;
 
+function chunkArray(array: number[], chunkSize: number): number[][] {
+  return Array.from({ length: Math.ceil(array.length / chunkSize) }, (_, index) =>
+    array.slice(index * chunkSize, (index + 1) * chunkSize)
+  );
+}
+
 export default function Pokedex() {
   const { data }: any = useSuspenseQuery(query);
   const pokemonList: Pokemon[] = data?.pokemons;
@@ -85,10 +92,14 @@ export default function Pokedex() {
   const [formValues, setFormValues] = useState<FormInput>(defaultValues);
   const { register, handleSubmit, getValues, reset, resetField } = useForm<FormInput>({ defaultValues });
   const onSubmit: SubmitHandler<FormInput> = data => setFormValues({ ...data });
-  const handleFilterReset = () => { reset(); };
+  const handleFilterReset = () => { 
+    reset(); 
+    setActivePage(0); 
+  };
   const handleFilterFields = () => {
     clearTimeout(timer);
     timer = setTimeout(() => setFormValues(getValues()), 50);
+    setActivePage(0);
   };
   const handleFilterTextfield = () => {
     handleFilterFields();
@@ -101,10 +112,10 @@ export default function Pokedex() {
   const uniqueTypes = [...new Set(pokemonListBySearchName.flatMap(pokemon => pokemon.types))].sort();
 
   const pokemonListByNameAndTypes: Pokemon[] = formValues.filterTypes.length > 0
-    ? pokemonListBySearchName.filter(({ types }) =>
-        formValues.filterTypes.some(type => types.includes(type))
-      )
-    : pokemonListBySearchName;
+  ? pokemonListBySearchName.filter(({ types }) =>
+      formValues.filterTypes.some(type => types.includes(type))
+    )
+  : pokemonListBySearchName;
 
   const filterTypeRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -115,10 +126,24 @@ export default function Pokedex() {
     };
 
     window.addEventListener('mousedown', handleOutSideClick);
-    return () => {
-      window.removeEventListener('mousedown', handleOutSideClick);
-    };
+    return () => window.removeEventListener('mousedown', handleOutSideClick);
   }, [isFilterOpen]);
+
+
+  // for pager
+  const isTablet = useMediaQuery('(min-width: 768px)');
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
+  const [pageCount, setPageCount] = useState<number>(0);
+  const [activePage, setActivePage] = useState<number>(0);
+  const pageSize = isDesktop ? 9 : 6;
+  const length = pokemonListByNameAndTypes?.length || 0;
+  const pageSets = chunkArray(Array.from({ length }, (_, index) => index), pageSize);
+
+  useEffect(() => {
+    if (isDesktop || isTablet) {
+      setPageCount(Math.ceil(length / pageSize));
+    }
+  }, [isDesktop, isTablet, pokemonListByNameAndTypes]);
 
   return (
     <section className={cn('section bg-white')}>
@@ -224,14 +249,29 @@ export default function Pokedex() {
               'lg:grid-cols-3 lg:gap-x-8 lg:gap-y-11 lg:mt-11'
             )}
           >
-            {pokemonListByNameAndTypes.map((data, index) => (
-              <li key={index}>
-                <Card data={data} />
-              </li>
-            ))}
+            {pokemonListByNameAndTypes.map((data, index) => {
+              const isHidden = !pageSets.at(activePage)?.includes(index);
+
+              return (
+                <li key={index} className={cn({ 'md:hidden': isHidden  })}>
+                  <Card data={data} />
+                </li>
+            )})}
           </ul>
         )}
       </div>
+      
+      {/* Pager */}
+      {isTablet && pageCount > 0 && (
+        <div className="hidden: md:flex items-center justify-center pb-12 gap-x-4">
+          {Array.from({ length: pageCount }, (_, index) => index).map((item: number) => (
+            <button 
+              key={item} onClick={() => setActivePage(item)}
+              className={cn('rounded-[50%] w-2 h-2 bg-dark opacity-50', { '!opacity-100': activePage === item })} />
+          ))}
+        </div>
+      )}
+      
     </section>
   );
 }
