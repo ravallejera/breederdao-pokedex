@@ -10,23 +10,9 @@ import cn from 'classnames';
 import Card from '@/components/card';
 import SvgClose from '@/svg/close';
 import styles from './page.module.scss';
-
-export interface Pokemon {
-  __typename: string;
-  name: string;
-  classification: string;
-  id: string;
-  number: string;
-  image: string;
-  types: string[];
-  maxHP: number,
-  maxCP: number,
-  attacks: {
-    __typename: string;
-    fast: any[];
-    special: any[];
-  };
-}
+import { Pokemon } from '@/utils/types';
+import { PokemonFragment } from '@/fragments/pokemon.fragment';
+import { chunkArray } from '@/utils/helperFunctions';
 
 interface FormInput {
   filterSearch: string;
@@ -36,56 +22,11 @@ interface FormInput {
 const query = gql`
   query PokemonList {
     pokemons(first: 20) {
-      name
-      classification
-      id
-      number
-      image
-      types
-      maxHP
-      maxCP
-      weaknesses
-      resistant
-      height {
-        minimum
-        maximum
-      }
-      weight {
-        minimum
-        maximum
-      }
-      evolutions {
-        name
-      }
-      evolutionRequirements {
-        name
-      }
-      attacks {
-        fast {
-          type
-          name
-          damage
-        }
-        special {
-          type
-          name
-          damage
-        }
-      }
+      ...PokemonDetails
     }
   }
+  ${PokemonFragment}
 `;
-
-function chunkArray<T>(array: T[], size: number): T[][] {
-  const chunkedArray: T[][] = [];
-
-  for (let i = 0; i < array.length; i += size) {
-    const chunk = array.slice(i, i + size);
-    chunkedArray.push(chunk);
-  }
-
-  return chunkedArray;
-}
 
 export default function Pokedex() {
   const { data }: any = useSuspenseQuery(query);
@@ -142,28 +83,18 @@ export default function Pokedex() {
   const [activePage, setActivePage] = useState<number>(0);
   const pageSize = 9;
   const length = pokemonListByNameAndTypes?.length || 0;
-  const pageSets: any = chunkArray(pokemonListByNameAndTypes, pageSize);
+  const pageSets: Pokemon[][] = chunkArray(pokemonListByNameAndTypes, pageSize);
 
   useEffect(() => {
     setPageCount(Math.ceil(length / pageSize));
   }, [pokemonListByNameAndTypes]);
 
   return (
-    <section className={cn('section bg-white')}>
+    <section className="section bg-white">
       <div
-        className={cn(
-          'container',
-          'py-7 px-5 text-black',
-          'md:px-10 md:mx-auto',
-          'lg:max-w-[1186px] lg:pt-[73px] lg:pb-[60px]'
-        )}
-      >
-        <div className={cn('top-content')}>
-          <h1
-            className={cn(
-              'text-[27px] tracking-widest text-center mb-7 lg:text-[35px] lg:mb-8'
-            )}
-          >
+        className="container py-7 px-5 text-black md:px-10 md:mx-auto lg:max-w-[1186px] lg:pt-[73px] lg:pb-[60px]">
+        <div className="top-content">
+          <h1 className="text-[27px] tracking-widest text-center mb-7 lg:text-[35px] lg:mb-8">
             800 <b className='font-bold'>Pokemons</b> for you to choose your favorite
           </h1>
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -172,22 +103,15 @@ export default function Pokedex() {
               type='text'
               placeholder='Encuentra tu pokémon...'
               onKeyUp={handleFilterTextfield}
-              className={cn(
-                'bg-light-2 w-full rounded-[40px] h-[31px] shadow-textfield text-[12px] text-dark px-4',
-                'lg:h-[53px] lg:text-[16px] lg:px-8'
-              )}
+              className="bg-light-2 w-full rounded-[40px] h-[31px] shadow-textfield text-[12px] text-dark px-4 lg:h-[53px] lg:text-[16px] lg:px-8"
             />
             <div className='filter-buttons flex gap-x-4 mt-4 lg:gap-x-14 lg:mt-9'>
               <div
-                className={cn('filter-type', 'relative grid')}
+                className="filter-type relative grid"
               >
                 <button
                   onClick={toggleFilter}
-                  className={cn(
-                    'bg-light-2 w-[77px] rounded-[8px] h-[20px] shadow-textfield text-[12px] text-black px-3',
-                    'md:w-[134px] md:h-[24px] md:text-[14px]'
-                  )}
-                >
+                  className="'bg-light-2 w-[77px] rounded-[8px] h-[20px] shadow-textfield text-[12px] text-black px-3 md:w-[134px] md:h-[24px] md:text-[14px]">
                   <span className='md:hidden'>Filter</span>
                   <span className='hidden md:inline-block'>Type</span>
                 </button>
@@ -198,9 +122,7 @@ export default function Pokedex() {
                 <div
                   ref={filterTypeRef}
                   className={cn(
-                    'filter-list',
-                    'grid grid-cols-3 gap-y-2 gap-x-5',
-                    'md:absolute md:z-10 md:top-8 md:py-4 md:px-8',
+                    'filter-list grid grid-cols-3 gap-y-2 gap-x-5 md:absolute md:z-10 md:top-8 md:py-4 md:px-8',
                     'md:grid-cols-1 md:bg-light-2 md:w-full md:rounded-[8px] md:shadow-textfield md:text-[14px] md:text-black',
                     { hidden: !isFilterOpen, [styles.filterListOpen]: isFilterOpen }
                   )}
@@ -221,7 +143,7 @@ export default function Pokedex() {
                         />
                         <label
                           htmlFor={`cb-${index}`}
-                          className={cn('text-[16px]')}
+                          className="text-[16px]"
                         >
                           {type}
                         </label>
@@ -230,14 +152,10 @@ export default function Pokedex() {
                   ))}
                 </div>
               </div>
-              <div className={cn('filter-reset', 'relative grid')}>
+              <div className="filter-reset relative grid">
                 <button
                   onClick={handleFilterReset}
-                  className={cn(
-                    'bg-light-2 w-[77px] rounded-[8px] h-[20px] shadow-textfield text-[12px] text-black px-3',
-                    'md:w-[134px] md:h-[24px] md:text-[14px]'
-                  )}
-                >
+                  className="bg-light-2 w-[77px] rounded-[8px] h-[20px] shadow-textfield text-[12px] text-black px-3 md:w-[134px] md:h-[24px] md:text-[14px]">
                   Reset
                 </button>
               </div>
@@ -246,13 +164,8 @@ export default function Pokedex() {
         </div>
         {pokemonListByNameAndTypes.length > 0 && (
           <ul
-            className={cn(
-              'grid gap-y-6 mt-7',
-              'md:grid-cols-2 md:gap-x-5',
-              'lg:grid-cols-3 lg:gap-x-8 lg:gap-y-11 lg:mt-11'
-            )}
-          >
-            {pageSets.at(activePage).map((data:Pokemon, index: number) => (
+            className="grid gap-y-6 mt-7 md:grid-cols-2 md:gap-x-5 lg:grid-cols-3 lg:gap-x-8 lg:gap-y-11 lg:mt-11">
+            {pageSets[activePage].map((data:Pokemon, index: number) => (
               <li key={index}>
                 <Card data={data} />
               </li>

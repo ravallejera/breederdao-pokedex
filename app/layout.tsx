@@ -3,7 +3,7 @@ import { Karla, Roboto } from 'next/font/google';
 import cn from 'classnames';
 import { ApolloWrapper } from "@/lib/apollo-wrapper";
 
-import Header from '@/components/header';
+import Header from '@/components/header/header';
 import Footer from '@/components/footer';
 
 const karla = Karla({ 

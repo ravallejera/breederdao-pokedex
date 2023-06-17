@@ -6,7 +6,7 @@ import SvgLogo from '@/svg/logo';
 import SvgBurger from '@/svg/burger';
 
 import cn from 'classnames';
-import styles from '@/components/header.module.scss';
+import styles from './header.module.scss';
 
 export default function Header() {
   const currentRoute = usePathname();
