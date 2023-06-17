@@ -21,6 +21,11 @@ module.exports = {
         'header-expanded': '4px 4px 24px rgba(1, 17, 38, 0.2)',
         button: 'inset 0px -9px 0px rgba(0, 0, 0, 0.18)',
         textfield: '4px 4px 4px rgba(33, 33, 33, 0.1)',
+        card: '4px 4px 16px rgba(1, 28, 64, 0.2)',
+        pill: 'inset 0px -2px 0px rgba(0, 0, 0, 0.18)',
+      },
+      dropShadow: {
+        'card-text': '4px 4px 4px rgba(33, 33, 33, 0.1)',
       }
     },
     colors: {
@@ -30,10 +35,12 @@ module.exports = {
       danger: '#D93E30',
       light: '#F6F7F9',
       'light-2': '#F2F2F2',
+      'light-3': '#FDFDFD',
       dark: '#212121',
       green: '#73D677',
       white: '#ffffff',
       black: '#000000',
+      warning: '#F2CB07',
       deu: {
         100: '#FAD942',
         200: '#DCBF36',
@@ -56,7 +63,7 @@ module.exports = {
         300: '#FF6C71',
         400: '#F80037',
         500: '#F3F6F7',
-        600: '#1E1E1E'
+        600: '#1E1E1E',
       }
     }
   },

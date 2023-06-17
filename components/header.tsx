@@ -1,5 +1,5 @@
 'use client'; // This is a client component
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import SvgLogo from '@/svg/logo';
@@ -41,29 +41,17 @@ export default function Header() {
     }
   ];
 
+  useEffect(() => {
+    if (isMenuOpen) setIsMenuOpen(false);
+  }, [currentRoute]);
+
   return (
-    <header className={cn(
-      'nav relative z-10 px-6 pt-5 pb-3 h-14 bg-third shadow-header',
-      'md:px-5 md:py-6 md:items-start md:h-auto',
-      'lg:px-0',
-    )}>
+    <header className="nav relative z-10 px-6 pt-5 pb-3 h-14 bg-third shadow-header md:px-5 md:py-6 md:items-start md:h-auto lg:px-0">
       <div className={cn('nav-overlay hidden', {[styles.navOverlay]: isMenuOpen })} onClick={toggleMenu} />
-      <div className={cn(
-        'nav-inner flex items-center justify-between',
-        'md:flex md:mx-auto',
-        'lg:max-w-[1186px] lg:px-7',
-        {[styles.navInner]: isMenuOpen },
-      )}>
-        <div className={cn(
-          'logo flex',
-          {[styles.navLogo]: isMenuOpen },
-        )}>
+      <div className={cn('nav-inner flex items-center justify-between md:flex md:mx-auto lg:max-w-[1186px] lg:px-7', {[styles.navInner]: isMenuOpen })}>
+        <div className={cn('logo flex', {[styles.navLogo]: isMenuOpen })}>
           <Link href="/">
-            <SvgLogo className={cn(
-              'w-[59px]',
-              'md:w-[121px]',
-              'lg:w-[157px]',
-            )} />
+            <SvgLogo className="w-[59px] md:w-[121px] lg:w-[157px]" />
           </Link>
         </div>
         {!isMenuOpen && (
@@ -75,25 +63,12 @@ export default function Header() {
           </button>
         )}
 
-        <nav className={cn(
-          'menu hidden',
-          'md:block',
-          {[styles.navMenu]: isMenuOpen },
-        )}>
-          <ul className={cn(
-            'grid',
-            'md:flex md:pr-8 md:gap-11',
-            'lg:pr-0',
-          )}>
+        <nav className={cn('menu hidden md:block', {[styles.navMenu]: isMenuOpen })}>
+          <ul className="grid md:flex md:pr-8 md:gap-11 lg:pr-0">
             {navList.map((item, index) => {
               const isActive = item.path === currentRoute;
-              const defaultClass = cn(
-                'font-roboto text-[27px] leading-[32px] text-dark',
-                'md:flex md:relative md:text-[19px] md:leading-[22px]',
-              );
-              const activeClass = cn(
-                'hidden md:block before:content-[""] before:absolute before:h-[3px] before:inset-x-0 before:top-[40px] before:-mx-2 before:rounded-[3px] before:bg-dark pointer-events-none',
-              );
+              const defaultClass = 'font-roboto text-[27px] leading-[32px] text-dark md:flex md:relative md:text-[19px] md:leading-[22px]';
+              const activeClass = 'before:hidden md:before:block before:content-[""] before:absolute before:h-[3px] before:inset-x-0 before:top-[40px] before:-mx-2 before:rounded-[3px] before:bg-dark pointer-events-none';
 
               return (
                 <li key={index} className={cn(item.LIclassName)}>
