@@ -2,6 +2,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import cn from 'classnames';
 
+{/* TOFIX: temporary fix, this should ne removed, once 'Response not successful: Received status code 404' is resolve */}
+import Pokedex from '@/app/pokedex/page';
+
 export default function Home() {
   return (
     <section className={cn('bg-third relative overflow-hidden')}>
@@ -28,6 +31,11 @@ export default function Home() {
             See Pokemons
           </Link>
         </div>
+      </div>
+
+      {/* TOFIX: temporary fix, this should ne removed, once 'Response not successful: Received status code 404' is resolve */}
+      <div className='hidden'>
+        <Pokedex />
       </div>
     </section>
   );

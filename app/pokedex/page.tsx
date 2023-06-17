@@ -1,4 +1,7 @@
 'use client';
+
+export const dynamic = "force-dynamic";
+
 import { useSuspenseQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { gql } from '@apollo/client';
@@ -7,7 +10,6 @@ import cn from 'classnames';
 import Card from '@/components/card';
 import SvgClose from '@/svg/close';
 import styles from './page.module.scss';
-import { useMediaQuery } from 'usehooks-ts';
 
 export interface Pokemon {
   __typename: string;
@@ -74,10 +76,15 @@ const query = gql`
   }
 `;
 
-function chunkArray(array: number[], chunkSize: number): number[][] {
-  return Array.from({ length: Math.ceil(array.length / chunkSize) }, (_, index) =>
-    array.slice(index * chunkSize, (index + 1) * chunkSize)
-  );
+function chunkArray<T>(array: T[], size: number): T[][] {
+  const chunkedArray: T[][] = [];
+
+  for (let i = 0; i < array.length; i += size) {
+    const chunk = array.slice(i, i + size);
+    chunkedArray.push(chunk);
+  }
+
+  return chunkedArray;
 }
 
 export default function Pokedex() {
@@ -131,19 +138,15 @@ export default function Pokedex() {
 
 
   // for pager
-  const isTablet = useMediaQuery('(min-width: 768px)');
-  const isDesktop = useMediaQuery('(min-width: 1024px)');
   const [pageCount, setPageCount] = useState<number>(0);
   const [activePage, setActivePage] = useState<number>(0);
-  const pageSize = isDesktop ? 9 : 6;
+  const pageSize = 9;
   const length = pokemonListByNameAndTypes?.length || 0;
-  const pageSets = chunkArray(Array.from({ length }, (_, index) => index), pageSize);
+  const pageSets: any = chunkArray(pokemonListByNameAndTypes, pageSize);
 
   useEffect(() => {
-    if (isDesktop || isTablet) {
-      setPageCount(Math.ceil(length / pageSize));
-    }
-  }, [isDesktop, isTablet, pokemonListByNameAndTypes]);
+    setPageCount(Math.ceil(length / pageSize));
+  }, [pokemonListByNameAndTypes]);
 
   return (
     <section className={cn('section bg-white')}>
@@ -249,21 +252,18 @@ export default function Pokedex() {
               'lg:grid-cols-3 lg:gap-x-8 lg:gap-y-11 lg:mt-11'
             )}
           >
-            {pokemonListByNameAndTypes.map((data, index) => {
-              const isHidden = !pageSets.at(activePage)?.includes(index);
-
-              return (
-                <li key={index} className={cn({ 'md:hidden': isHidden  })}>
-                  <Card data={data} />
-                </li>
-            )})}
+            {pageSets.at(activePage).map((data:Pokemon, index: number) => (
+              <li key={index}>
+                <Card data={data} />
+              </li>
+            ))}
           </ul>
         )}
       </div>
       
       {/* Pager */}
-      {isTablet && pageCount > 0 && (
-        <div className="hidden: md:flex items-center justify-center pb-12 gap-x-4">
+      {pageCount > 0 && (
+        <div className="flex items-center justify-center pb-12 gap-x-4">
           {Array.from({ length: pageCount }, (_, index) => index).map((item: number) => (
             <button 
               key={item} onClick={() => setActivePage(item)}
