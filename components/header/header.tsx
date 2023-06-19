@@ -46,7 +46,7 @@ export default function Header() {
   }, [currentRoute]);
 
   return (
-    <header className="nav relative z-10 px-6 pt-5 pb-3 h-14 bg-third shadow-header md:px-5 md:py-6 md:items-start md:h-auto lg:px-0">
+    <header className="nav sticky top-0 z-10 px-6 pt-5 pb-3 h-14 bg-third shadow-header md:px-5 md:py-6 md:items-start md:h-auto lg:px-0">
       <div className={cn('nav-overlay hidden', {[styles.navOverlay]: isMenuOpen })} onClick={toggleMenu} />
       <div className={cn('nav-inner flex items-center justify-between md:flex md:mx-auto lg:max-w-[1186px] lg:px-7', {[styles.navInner]: isMenuOpen })}>
         <div className={cn('logo flex', {[styles.navLogo]: isMenuOpen })}>
